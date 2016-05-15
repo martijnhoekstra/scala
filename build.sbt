@@ -566,6 +566,9 @@ lazy val partestJavaAgent = Project("partest-javaagent", file(".") / "src" / "pa
     exportJars := true
   )
 
+def isWindows = sys.props("os.name").startsWith("Windows")
+def pullbinlibsscript = if (isWindows) "/pull-binary-libs.bat" else "/pull-binary-libs.sh"
+
 lazy val test = project
   .dependsOn(compiler, interactive, replJlineEmbedded, scalap, partestExtras, partestJavaAgent, scaladoc)
   .configs(IntegrationTest)
@@ -584,7 +587,7 @@ lazy val test = project
     fork in IntegrationTest := true,
     javaOptions in IntegrationTest += "-Xmx1G",
     testFrameworks += new TestFramework("scala.tools.partest.sbt.Framework"),
-    testOptions in IntegrationTest += Tests.Setup( () => root.base.getAbsolutePath + "/pull-binary-libs.sh" ! ),
+    testOptions in IntegrationTest += Tests.Setup( () => root.base.getAbsolutePath + pullbinlibsscript ! ),
     testOptions in IntegrationTest += Tests.Argument("-Dpartest.java_opts=-Xmx1024M -Xms64M -XX:MaxPermSize=128M"),
     definedTests in IntegrationTest += (
       new sbt.TestDefinition(
