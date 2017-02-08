@@ -17,10 +17,10 @@ object Test {
   }
 
   def t1() = {
-    val p = Runtime.getRuntime().exec("ls");
+    val p = Runtime.getRuntime().exec("java")
     type Destroyable = { def destroy() : Unit }
-    def doDestroy( obj : Destroyable ) : Unit = obj.destroy();
-    doDestroy( p );
+    def doDestroy( obj : Destroyable ) : Unit = obj.destroy()
+    doDestroy( p )
   }
   def t2() = {
     System.setSecurityManager(Mgr)
@@ -33,10 +33,7 @@ object Test {
   }
 
   def main(args: Array[String]) {
-    // figuring this will otherwise break on windows
-    try t1()
-    catch { case _: java.io.IOException => () }
-
+    t1()
     t2()
   }
 }
