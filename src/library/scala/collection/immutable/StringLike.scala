@@ -283,7 +283,7 @@ self =>
   /**
    * @throws java.lang.IllegalArgumentException  If the string does not contain a parsable `Boolean`.
    */
-  def toBoolean: Boolean = parseBoolean(toString)
+  def toBoolean: Boolean = toBooleanImpl(toString)
   /**
    * Parse as a `Byte` (string must contain only decimal digits and optional leading `-`).
    * @throws java.lang.NumberFormatException  If the string does not contain a parsable `Byte`.
@@ -317,7 +317,141 @@ self =>
    */
   def toDouble: Double   = java.lang.Double.parseDouble(toString)
 
-  private def parseBoolean(s: String): Boolean =
+  def parseByte: Option[Byte] = { //or implement in terms of parseShort
+    val str = toString
+    val len = str.length
+    @scala.annotation.tailrec
+    def step(i: Int, agg: Int): Option[Int] = {
+      if (agg < Byte.MinValue) None
+      else if(i == len) Some(agg)
+      else {
+        val digit = decValue(str(i))
+        if (digit == -1) None
+        else step(i + 1, agg * 10 - digit)
+      }
+    }
+
+    if(len == 0) None
+    else {
+      val first = str(0)
+      val v = decValue(first)
+      if (len == 1){
+        if (v > -1) Some(v.toByte)
+        else None
+      } else {
+        if (v > -1) step(1, v).flatMap(neg => if (neg == Byte.MinValue) None else Some((-neg).toByte))
+        else if (first == '+') step(1, 0).flatMap(neg => if (neg == Byte.MinValue) None else Some((-neg).toByte))
+        else if (first == '-') step(1, 0).map(_.toByte)
+        else None
+      }
+    }
+  }
+
+  def parseShort: Option[Short] = { //or implement in terms of parseInt
+    val str = toString
+    val len = str.length
+    @scala.annotation.tailrec
+    def step(i: Int, agg: Int): Option[Int] = {
+      if (agg < Short.MinValue) None
+      else if(i == len) Some(agg)
+      else {
+        val digit = decValue(str(i))
+        if (digit == -1) None
+        else step(i + 1, agg * 10 - digit)
+      }
+    }
+
+    if(len == 0) None
+    else {
+      val first = str(0)
+      val v = decValue(first)
+      if (len == 1){
+        if (v > -1) Some(v.toShort)
+        else None
+      } else {
+        if (v > -1) step(1, v).flatMap(neg => if (neg == Short.MinValue) None else Some((-neg).toShort))
+        else if (first == '+') step(1, 0).flatMap(neg => if (neg == Short.MinValue) None else Some((-neg).toShort))
+        else if (first == '-') step(1, 0).map(_.toShort)
+        else None
+      }
+    }
+  }
+
+
+  def parseInt: Option[Int] = { //or implement in terms of parseLong
+    val str = toString
+    val len = str.length()
+    @scala.annotation.tailrec
+    def step(i: Int, agg: Int): Option[Int] = {
+      if (agg > 0) None
+      else if(i == len) Some(agg)
+      else {
+        val digit = decValue(str(i))
+        if (digit == -1) None
+        else step(i + 1, agg * 10 - digit)
+      }
+    }
+
+    if(len == 0) None
+    else {
+      val first = str(0)
+      val v = decValue(first)
+      if (len == 1){
+        if (v > -1) Some(v)
+        else None
+      } else {
+        if (v > -1) step(1, -v).flatMap(neg => if (neg == Int.MinValue) None else Some(-neg))
+        else if (first == '+') step(1, 0).flatMap(neg => if (neg == Int.MinValue) None else Some(-neg))
+        else if (first == '-') step(1, 0)
+        else None
+      }
+    }
+  }
+
+  def parseLong: Option[Long] = {
+    val str = toString
+    val len = str.length()
+    @scala.annotation.tailrec
+    def step(i: Int, agg: Long): Option[Long] = {
+      if (agg > 0) None
+      else if(i == len) Some(agg)
+      else {
+        val digit = decValue(str(i)).toLong
+        if (digit == -1) None
+        else step(i + 1, agg * 10 - digit)
+      }
+    }
+
+    if(len == 0) None
+    else {
+      val first = str(0)
+      val v = decValue(first).toLong
+      if (len == 1){
+        if (v > -1) Some(v)
+        else None
+      } else {
+        if (v > -1) step(1, -v).flatMap(neg => if (neg == Long.MinValue) None else Some(-neg))
+        else if (first == '+') step(1, 0).flatMap(neg => if (neg == Long.MinValue) None else Some(-neg))
+        else if (first == '-') step(1, 0)
+        else None
+      }
+    }
+  }
+
+  def parseFloat: Option[Float] = scala.util.Try(toFloat).toOption //should be roughly validated first
+  def parseDouble: Option[Double] = scala.util.Try(toDouble).toOption //should be roughly validated first
+
+  private def decValue(ch: Char): Int = java.lang.Character.digit(ch, 10)
+
+  def parseBoolean: Option[Boolean] =
+    toString match {
+      case "true" => Some(true)
+      case "false" => Some(false)
+      case _ => None
+    }
+    
+
+  private def toBooleanImpl(s: String): Boolean =
     if (s != null) s.toLowerCase match {
       case "true" => true
       case "false" => false
