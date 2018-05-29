@@ -14,6 +14,7 @@ object ScriptCommands {
   def all = Seq(
     setupPublishCore,
     setupValidateTest,
+    setupSkipBuild,
     setupBootstrapStarr, setupBootstrapLocker, setupBootstrapQuick, setupBootstrapPublish,
     enableOptimizerCommand
   )
@@ -95,6 +96,8 @@ object ScriptCommands {
       // pgpSigningKey and pgpPassphrase are set externally by travis / the bootstrap script, as the sbt-pgp plugin is not enabled by default
     ) ++ enableOptimizer
   }
+
+  def setupSkipBuild = setup("setupSkipBuild")(_ => List(skip in Global in compile := true))
 
   def enableOptimizerCommand = setup("enableOptimizer")(_ => enableOptimizer)
 

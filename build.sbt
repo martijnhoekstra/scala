@@ -607,6 +607,7 @@ lazy val osgiTestEclipse = osgiTestProject(
   project.in(file(".") / "target" / "osgiTestEclipse"),
   "org.eclipse.tycho" % "org.eclipse.osgi" % "3.10.100.v20150521-1310")
 
+
 def osgiTestProject(p: Project, framework: ModuleID) = p
   .dependsOn(library, reflect, compiler)
   .settings(clearSourceAndResourceDirectories)
