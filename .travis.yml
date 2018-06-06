@@ -64,37 +64,37 @@ jobs:
         if: type = pull_request
         script:
           - STARR=`cat $HOME/.props/buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-          - sbt -Dstarr.version=$STARR -info setupValidateTest test/*:update bootstrap/*:update partest-javaagent/*:update partest/update setupSkipBuild "partest pos"
+          - sbt -Dstarr.version=$STARR -info setupValidateTest setupSkipBuild "partest pos"
 
       - stage: test
         if: type = pull_request
         script:
           - STARR=`cat $HOME/.props/buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-          - sbt -Dstarr.version=$STARR -info setupValidateTest test/*:update bootstrap/*:update partest-javaagent/*:update partest/update setupSkipBuild "partest run"
+          - sbt -Dstarr.version=$STARR -info setupValidateTest  setupSkipBuild "partest run"
          
       - stage: test
         if: type = pull_request
         script:
           - STARR=`cat $HOME/.props/buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-          - sbt -Dstarr.version=$STARR -info setupValidateTest partest/*:update test/*:update bootstrap/*:update partest-javaagent/*:update setupSkipBuild "partest --show-diff neg res scalap specialized"
+          - sbt -Dstarr.version=$STARR -info setupValidateTest setupSkipBuild "partest --show-diff neg res scalap specialized"
           
       - stage: test
         if: type = pull_request
         script:
           - STARR=`cat $HOME/.props/buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-          - sbt -Dstarr.version=$STARR -info setupValidateTest test/*:update bootstrap/*:update partest-javaagent/*:update partest/update setupSkipBuild "partest instrumented presentation"
+          - sbt -Dstarr.version=$STARR -info setupValidateTest setupSkipBuild "partest instrumented presentation"
           
       - stage: test
         if: type = pull_request
         script:
           - STARR=`cat $HOME/.props/buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-          - sbt -Dstarr.version=$STARR -info setupValidateTest test/*:update bootstrap/*:update partest-javaagent/*:update partest/update setupSkipBuild "partest --srcpath scaladoc"
+          - sbt -Dstarr.version=$STARR -info setupValidateTest  setupSkipBuild "partest --srcpath scaladoc"
 
       - stage: test
         if: type = pull_request
         script:
           - STARR=`cat $HOME/.props/buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-          - sbt -Dstarr.version=$STARR -info setupValidateTest test/*:update bootstrap/*:update partest-javaagent/*:update partest/update setupSkipBuild "partest -Dpartest.scalac_opts=-Ymacro-annotations --srcpath macro-annot"
+          - sbt -Dstarr.version=$STARR -info setupValidateTest setupSkipBuild "partest -Dpartest.scalac_opts=-Ymacro-annotations --srcpath macro-annot"
 
       - stage: test
         if: type = pull_request
@@ -106,13 +106,13 @@ jobs:
         if: type = pull_request
         script:
           - STARR=`cat $HOME/.props/buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-          - sbt -Dstarr.version=$STARR -info setupValidateTest scalacheck/test
+          - sbt -Dstarr.version=$STARR -info setupValidateTest setupSkipBuild scalacheck/test
           
       - stage: test
         if: type = pull_request
         script:
           - STARR=`cat $HOME/.props/buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-          - sbt -Dstarr.version=$STARR -info setupValidateTest osgiTestFelix/test osgiTestEclipse/test 
+          - sbt -Dstarr.version=$STARR -info setupValidateTest setupSkipBuild osgiTestFelix/test osgiTestEclipse/test 
 
       # build the spec using jekyll
       - stage: build
