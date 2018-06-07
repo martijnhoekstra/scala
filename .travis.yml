@@ -9,7 +9,10 @@ branches:
   - 2.14.x
   
 language: scala
-jdk: openjdk8
+jdk:
+  - openjdk8
+  - openjdk9
+  - openjdk10
 
 cache:
   bundler: true
