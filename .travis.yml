@@ -9,6 +9,7 @@ branches:
     - 2.14.x
   
 language: scala
+
 jdk:
   - openjdk8
   - openjdk9
