@@ -802,8 +802,9 @@ abstract class UnCurry extends InfoTransform
       if (dd.symbol.isConstructor)
         reporter.error(dd.symbol.pos, "A constructor cannot be annotated with a `varargs` annotation.")
       else {
+        val hasRepeatedLast = dd.symbol.paramss.flatMap(_.lastOption).lastOption.map(sym => definitions.isRepeatedParamType(sym.tpe)).getOrElse(false)
         val hasRepeated = mexists(dd.symbol.paramss)(sym => definitions.isRepeatedParamType(sym.tpe))
-        if (!hasRepeated) reporter.error(dd.symbol.pos, "A method without repeated parameters cannot be annotated with the `varargs` annotation.")
+        if (!hasRepeatedLast) reporter.error(dd.symbol.pos, "A method without repeated parameters in its last parameter list cannot be annotated with the `varargs` annotation.")
       }
 
     /**
