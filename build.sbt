@@ -96,6 +96,7 @@ val mimaFilterSettings = Seq {
     ProblemFilters.exclude[DirectMissingMethodProblem]("scala.reflect.api.Universe.TypeTagImpl"),
     ProblemFilters.exclude[MissingClassProblem]("scala.reflect.macros.Attachments$"),
     ProblemFilters.exclude[DirectMissingMethodProblem]("scala.StringContext.processUnicode"),
+    ProblemFilters.exclude[MissingClassProblem]("scala.StringContext$InvalidUnicodeEscapeException"),
     ProblemFilters.exclude[DirectAbstractMethodProblem]("scala.collection.immutable.ArraySeq.stepper"),
     ProblemFilters.exclude[ReversedAbstractMethodProblem]("scala.collection.immutable.ArraySeq.stepper"),
     ProblemFilters.exclude[DirectAbstractMethodProblem]("scala.collection.mutable.ArraySeq.stepper"),
