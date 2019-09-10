@@ -108,8 +108,8 @@ class IMain(val settings: Settings, parentClassLoaderOverride: Option[ClassLoade
     try body finally label = saved
   }
 
-  override def visibleSettings: SettingSet = settings.visibleSettings
-  override def userSetSettings: SettingSet = settings.userSetSettings
+  override def visibleSettings: List[Setting] = settings.visibleSettings
+  override def userSetSettings: List[Setting] = settings.userSetSettings
   override def updateSettings(arguments: List[String]): Boolean = {
     val (ok, rest) = settings.processArguments(arguments, processAll = false)
     ok && rest.isEmpty
@@ -134,11 +134,11 @@ class IMain(val settings: Settings, parentClassLoaderOverride: Option[ClassLoade
   override def initializeCompiler(): Boolean = global != null
 
   lazy val global: Global = {
-    // Can't use our own reporter until global is initialized
-    val startupReporter = new StoreReporter
-
-    compilerSettings.outputDirs setSingleOutput replOutput.dir
+    compilerSettings.outputDirs.setSingleOutput(replOutput.dir)
     compilerSettings.exposeEmptyPackage.value = true
+
+    // Can't use our own reporter until global is initialized
+    val startupReporter = new StoreReporter(compilerSettings)
 
     val compiler = new Global(compilerSettings, startupReporter) with ReplGlobal
 

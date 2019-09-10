@@ -2436,9 +2436,6 @@ trait Typers extends Adaptations with Tags with TypersTracking with PatternTyper
           case _                                        => ()
         }
 
-      if (tdef.symbol.isDeferred && tdef.symbol.info.isHigherKinded)
-        checkFeature(tdef.pos, currentRun.runDefinitions.HigherKindsFeature)
-
       treeCopy.TypeDef(tdef, typedMods, tdef.name, tparams1, rhs1) setType NoType
     }
 
@@ -2884,12 +2881,12 @@ trait Typers extends Adaptations with Tags with TypersTracking with PatternTyper
       * where `S` is the expected type that defines a single abstract method (call it `apply` for the example),
       * that has signature `(p1: T1', ..., pN: TN'): T'`, synthesize the instantiation of the following anonymous class
       *
-      * ```
+      * {{{
       *   new S {
       *    def apply\$body(p1: T1, ..., pN: TN): T = body
       *    def apply(p1: T1', ..., pN: TN'): T' = apply\$body(p1,..., pN)
       *   }
-      * ```
+      * }}}
       *
       * The `apply` method is identified by the argument `sam`; `S` corresponds to the argument `pt`,
       * If `pt` is not fully defined, we derive `samClassTpFullyDefined` by inferring any unknown type parameters.
