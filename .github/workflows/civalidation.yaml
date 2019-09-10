@@ -1,0 +1,29 @@
+name: CI validation 2.13.x
+
+on:
+  pull_request:
+    branches:
+    - actionsExperiments
+  push:
+    branches:
+    - actionsExperiments
+
+jobs:
+  build:
+  
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, osx-latest]
+        jdk: [8, 11, 12]
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Publish STARR 
+      run: |
+        sbt -warn setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
+        STARR=`cat buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
+    - name: Test bootstrapped
+      run: sbt -Dstarr.version=$STARR -warn setupValidateTest test:compile info testAll
+    - name: Compile library with Dotty
+      run: sbt -Dscala.build.compileWithDotty=true library/compile
