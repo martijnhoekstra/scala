@@ -28,6 +28,6 @@ jobs:
   compile-library-with-dotty:
     runs-on: ubuntu-latest
     steps:
-    -uses: actions/checkout@v1
+    - uses: actions/checkout@v1
     - name: Compile library with Dotty
       run: sbt -Dscala.build.compileWithDotty=true library/compile
