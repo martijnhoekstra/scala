@@ -9,8 +9,7 @@ on:
     - actionsExperiments
 
 jobs:
-  build:
-  
+  bootstrap-test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -21,9 +20,14 @@ jobs:
     - uses: actions/checkout@v1
     - name: publish non-bootstrapped using STARR
       run: sbt -warn setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
-    - name: build & test bootstrapped with non-bootstrapped
+    - name: build and test bootstrapped
       run: |
         STARR=`cat buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
         sbt -Dstarr.version=$STARR -warn setupValidateTest test:compile info testAll
+      
+  compile-library-with-dotty:
+    runs-on: ubuntu-latest
+    steps:
+    -uses: actions/checkout@v1
     - name: Compile library with Dotty
       run: sbt -Dscala.build.compileWithDotty=true library/compile
