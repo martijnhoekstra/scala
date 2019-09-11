@@ -1,0 +1,16 @@
+name: SDKman! runner
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Download SDKMAN!
+      run: |
+        curl -sL https://get.sdkman.io | bash
+        echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
+        sdk list java
