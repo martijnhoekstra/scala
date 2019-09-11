@@ -1,23 +1,14 @@
-name: CI validation 2.13.x
+name: PR validation
 
-on:
-  pull_request:
-    branches:
-    - actionsExperiments
-  push:
-    branches:
-    - actionsExperiments
+on: [pull_request, push]
 
 jobs:
   bootstrap-test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        #, windows-latest, macOS-latest]
-    
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
     - name: publish non-bootstrapped using STARR
       run: sbt -warn setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
     - name: build and test bootstrapped
@@ -29,5 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
     - name: Compile library with Dotty
       run: sbt -Dscala.build.compileWithDotty=true library/compile
