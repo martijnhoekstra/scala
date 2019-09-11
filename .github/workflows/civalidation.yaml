@@ -19,11 +19,11 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Publish STARR 
+    - name: publish non-bootstrapped using STARR
+      run: sbt -warn setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
+    - name: build & test bootstrapped with non-bootstrapped
       run: |
-        sbt -warn setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
         STARR=`cat buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-    - name: Test bootstrapped
-      run: sbt -Dstarr.version=$STARR -warn setupValidateTest test:compile info testAll
+        sbt -Dstarr.version=$STARR -warn setupValidateTest test:compile info testAll
     - name: Compile library with Dotty
       run: sbt -Dscala.build.compileWithDotty=true library/compile
