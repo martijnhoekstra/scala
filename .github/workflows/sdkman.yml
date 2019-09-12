@@ -27,12 +27,8 @@ jobs:
         echo take one
         sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.[^ ]+).*$jdkpostfix/, a) {print a[1]}"
         jsdk=sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.[^ ]+).*$jdkpostfix/, a) {print a[1]}"
-        echo $jsdk
-        #echo take two
-        #sdk list java | gawk $matchstatement
-        #JSDK=sdk list java << gawk $matchstatement
-        #echo found jdk version $JSDK
-        #sdk install java $JSDK
-        #unset JAVA_HOME
-        #java -Xmx32m -version
-        #javac -J-Xmx32m -version
+        echo downloading jdk $jsdk
+        sdk install java $jsdk
+        unset JAVA_HOME
+        java -Xmx32m -version
+        javac -J-Xmx32m -version
