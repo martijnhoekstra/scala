@@ -1,14 +1,31 @@
 name: PR validation
 
-on: pull_request
+on: [pull_request, push]
 
 jobs:
   bootstrap-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jdkversion: [8, 11, 12]
+        jdkpostfix: [j9-adpt, hs-adpt]
     steps:
     - uses: actions/checkout@v1
       with:
         fetch-depth: 1
+    - name: Download SDKMAN!
+      run: |
+        curl -sL https://get.sdkman.io | bash
+        echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
+        jdkversion=${{ matrix.jdkversion }}
+        jdkpostfix=${{ matrix.jdkpostfix }}
+        sdk list java
+        jsdk=$(sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.$jdkpostfix)/, a) {print a[1]}")
+        sdk install java $jsdk
+        unset JAVA_HOME
+        java -Xmx32m -version
+        javac -J-Xmx32m -version
     - name: publish non-bootstrapped using STARR
       run: sbt -warn setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
     - name: build and test bootstrapped
@@ -18,9 +35,26 @@ jobs:
       
   compile-library-with-dotty:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jdkversion: [8, 11, 12]
+        jdkpostfix: [j9-adpt, hs-adpt]
     steps:
     - uses: actions/checkout@v1
       with:
         fetch-depth: 1
+    - name: Download SDKMAN!
+      run: |
+        curl -sL https://get.sdkman.io | bash
+        echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
+        jdkversion=${{ matrix.jdkversion }}
+        jdkpostfix=${{ matrix.jdkpostfix }}
+        sdk list java
+        jsdk=$(sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.$jdkpostfix)/, a) {print a[1]}")
+        sdk install java $jsdk
+        unset JAVA_HOME
+        java -Xmx32m -version
+        javac -J-Xmx32m -version
     - name: Compile library with Dotty
       run: sbt -Dscala.build.compileWithDotty=true library/compile
