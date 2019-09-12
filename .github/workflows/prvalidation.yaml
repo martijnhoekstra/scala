@@ -9,6 +9,7 @@ jobs:
       matrix:
         jdkversion: [8, 11, 12]
         jdkpostfix: [j9-adpt, hs-adpt]
+      fail-fast: false
     steps:
     - uses: actions/checkout@v1
       with:
@@ -23,7 +24,6 @@ jobs:
         sdk list java
         jsdk=$(sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.$jdkpostfix)/, a) {print a[1]}")
         sdk install java $jsdk
-        source "$HOME/.sdkman/bin/sdkman-init.sh"
         java -Xmx32m -version
         javac -J-Xmx32m -version
     - name: publish non-bootstrapped using STARR
@@ -46,6 +46,7 @@ jobs:
       matrix:
         jdkversion: [8, 11, 12]
         jdkpostfix: [j9-adpt, hs-adpt]
+      fail-fast: false
     steps:
     - uses: actions/checkout@v1
       with:
@@ -65,7 +66,7 @@ jobs:
         javac -J-Xmx32m -version
     - name: Compile library with Dotty
       run: |
-        unset JAVA_HOME
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
         java -Xmx32m -version
         javac -J-Xmx32m -version
         sbt -Dscala.build.compileWithDotty=true library/compile
