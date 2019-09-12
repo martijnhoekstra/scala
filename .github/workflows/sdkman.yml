@@ -26,6 +26,8 @@ jobs:
         echo matching $matchstatement 
         echo take one
         sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.[^ ]+).*$jdkpostfix/, a) {print a[1]}"
+        jsdk=sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.[^ ]+).*$jdkpostfix/, a) {print a[1]}"
+        echo $jsdk
         #echo take two
         #sdk list java | gawk $matchstatement
         #JSDK=sdk list java << gawk $matchstatement
