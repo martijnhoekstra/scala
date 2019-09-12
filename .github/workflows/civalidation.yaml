@@ -23,18 +23,18 @@ jobs:
         sdk list java
         jsdk=$(sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.$jdkpostfix)/, a) {print a[1]}")
         sdk install java $jsdk
-        unset JAVA_HOME
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
         java -Xmx32m -version
         javac -J-Xmx32m -version
     - name: publish non-bootstrapped using STARR
       run: |
-        unset JAVA_HOME
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
         java -Xmx32m -version
         javac -J-Xmx32m -version
         sbt -warn printJavaInfo setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
     - name: build and test bootstrapped
       run: |
-        unset JAVA_HOME
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
         java -Xmx32m -version
         javac -J-Xmx32m -version
         STARR=`cat buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
