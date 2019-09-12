@@ -17,11 +17,11 @@ jobs:
         curl -sL https://get.sdkman.io | bash
         echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
         source "$HOME/.sdkman/bin/sdkman-init.sh"
-        $jdkversion = ${{ strategy.matrix.jdkversion }}
+        jdkversion=${{ strategy.matrix.jdkversion }}
         echo jdk major version $jdkversion
-        $jdkpostfix = ${{ strategy.matrix.jdkpostfix }}
+        jdkpostfix=${{ strategy.matrix.jdkpostfix }}
         echo jdk postfix $jdkpostfix
-        $JSDK = sdk list java | perl -n -e'/(${{ strategy.matrix.jdkversion }}\.\d+\.\d+.\w+).*${{ strategy.matrix.jdkpostfix }}/gm && print $1'
+        JSDK=sdk list java | perl -n -e'/(${{ strategy.matrix.jdkversion }}\.\d+\.\d+.\w+).*${{ strategy.matrix.jdkpostfix }}/gm && print $1'
         echo found $JSDK
         sdk install java $JSDK
         unset JAVA_HOME
