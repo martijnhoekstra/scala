@@ -1,6 +1,6 @@
 name: PR validation
 
-on: [pull_request, push]
+on: pull_request
 
 jobs:
   bootstrap-test:
