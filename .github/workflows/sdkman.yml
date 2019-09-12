@@ -21,7 +21,8 @@ jobs:
         echo jdk major version $jdkversion
         jdkpostfix=${{ matrix.jdkpostfix }}
         echo jdk postfix $jdkpostfix
-        JSDK=sdk list java | gawk "match(\$0, /($jdkversion\.\d+\.\d+.\w+).*$jdkpostfix/, a) {print a[1]}"
+        sdk "list java"
+        JSDK=sdk "list java" | gawk "match(\$0, /($jdkversion\.\d+\.\d+.\w+).*$jdkpostfix/, a) {print a[1]}"
         echo found jdk version $JSDK
         sdk install java $JSDK
         unset JAVA_HOME
