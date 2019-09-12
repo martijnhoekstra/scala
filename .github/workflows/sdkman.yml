@@ -24,7 +24,7 @@ jobs:
         sdk list java
         echo finding java version
         sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.[^ ]+).*$jdkpostfix/, a) {print a[1]}"
-        jsdk=`(sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.[^ ]+).*$jdkpostfix/, a) {print a[1]}")`
+        jsdk=$(sdk list java | gawk "match(\$0, /($jdkversion\.[0-9]+.[0-9]+.[^ ]+).*$jdkpostfix/, a) {print a[1]}")
         echo jdk version set to $jsdk
         sdk install java $jsdk
         unset JAVA_HOME
