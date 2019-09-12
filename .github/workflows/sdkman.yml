@@ -21,9 +21,9 @@ jobs:
         echo jdk major version $jdkversion
         jdkpostfix=${{ matrix.jdkpostfix }}
         echo jdk postfix $jdkpostfix
-        echo perl command 1 "/($jdkversion\.\d+\.\d+.\w+).*$jdkpostfix/gm && print $1"
-        echo perl command 2 "/('$jdkversion'\.\d+\.\d+.\w+).*'$jdkpostfix'/gm && print $1"
-        JSDK=sdk list java | perl -n -e "if /('$jdkversion'\.\d+\.\d+.\w+).*'$jdkpostfix'/ print $1"
+        echo perl command 1 "/($jdkversion\.\d+\.\d+.\w+).*$jdkpostfix/gm && print \$1"
+        echo perl command 2 "/('$jdkversion'\.\d+\.\d+.\w+).*'$jdkpostfix'/gm && print '$1'"
+        JSDK=sdk list java | perl -n -e "if /($jdkversion\.\d+\.\d+.\w+).*$jdkpostfix/ print \$1"
         echo found jdk version $JSDK
         sdk install java $JSDK
         unset JAVA_HOME
