@@ -27,9 +27,16 @@ jobs:
         java -Xmx32m -version
         javac -J-Xmx32m -version
     - name: publish non-bootstrapped using STARR
-      run: sbt -warn printJavaInfo setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
+      run: |
+        unset JAVA_HOME
+        java -Xmx32m -version
+        javac -J-Xmx32m -version
+        sbt -warn printJavaInfo setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
     - name: build and test bootstrapped
       run: |
+        unset JAVA_HOME
+        java -Xmx32m -version
+        javac -J-Xmx32m -version
         STARR=`cat buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
         sbt -Dstarr.version=$STARR -warn printJavaInfo setupValidateTest test:compile info testAll
       
@@ -57,4 +64,8 @@ jobs:
         java -Xmx32m -version
         javac -J-Xmx32m -version
     - name: Compile library with Dotty
-      run: sbt -Dscala.build.compileWithDotty=true library/compile
+      run: |
+        unset JAVA_HOME
+        java -Xmx32m -version
+        javac -J-Xmx32m -version
+        sbt -Dscala.build.compileWithDotty=true library/compile
