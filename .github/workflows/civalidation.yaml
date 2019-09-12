@@ -27,11 +27,11 @@ jobs:
         java -Xmx32m -version
         javac -J-Xmx32m -version
     - name: publish non-bootstrapped using STARR
-      run: sbt -warn setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
+      run: sbt -warn printJavaInfo setupPublishCore generateBuildCharacterPropertiesFile headerCheck publishLocal
     - name: build and test bootstrapped
       run: |
         STARR=`cat buildcharacter.properties | grep ^maven.version.number | cut -d= -f2` && echo $STARR
-        sbt -Dstarr.version=$STARR -warn setupValidateTest test:compile info testAll
+        sbt -Dstarr.version=$STARR -warn printJavaInfo setupValidateTest test:compile info testAll
       
   compile-library-with-dotty:
     runs-on: ubuntu-latest

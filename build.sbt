@@ -49,6 +49,19 @@ val jansiDep          = "org.fusesource.jansi"           % "jansi"              
 val testInterfaceDep  = "org.scala-sbt"                  % "test-interface"                   % "1.0"
 val diffUtilsDep      = "com.googlecode.java-diff-utils" % "diffutils"                        % "1.3.0"
 
+val printJavaInfo = taskKey[Unit]("Prints information about the current java version")
+printJavaInfo := {
+  val javaVersion = System.getProperty("java.version")
+  val javaVendor  = System.getProperty("java.vendor")
+  val vm = System.getProperty("java.vm.name")
+  val vmVersion = System.getProperty("java.vm.version")
+  val runtime = System.getProperty("java.runtime.name")
+  val runtimeVersion = System.getProperty("java.runtime.version")
+  streams.value.log.info(s"$javaVendor java version $javaVersion")
+  streams.value.log.info(s"running on VM $vm $vmVersion")
+  streams.value.log.info(s"with runtime $runtime $runtimeVersion")
+}
+
 lazy val publishSettings : Seq[Setting[_]] = Seq(
   credentials ++= {
     val file = Path.userHome / ".credentials"
