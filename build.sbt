@@ -57,9 +57,9 @@ printJavaInfo := {
   val vmVersion = System.getProperty("java.vm.version")
   val runtime = System.getProperty("java.runtime.name")
   val runtimeVersion = System.getProperty("java.runtime.version")
-  streams.value.log.info(s"$javaVendor java version $javaVersion")
-  streams.value.log.info(s"running on VM $vm $vmVersion")
-  streams.value.log.info(s"with runtime $runtime $runtimeVersion")
+  streams.value.log.warn(s"$javaVendor java version $javaVersion")
+  streams.value.log.warn(s"running on VM $vm $vmVersion")
+  streams.value.log.warn(s"with runtime $runtime $runtimeVersion")
 }
 
 lazy val publishSettings : Seq[Setting[_]] = Seq(
