@@ -614,16 +614,17 @@ final class ArrayOps[A](private val xs: Array[A]) extends AnyVal {
 
   /** Sorts this array according to a comparison function.
     *
-    *  The sort is stable. That is, elements that are equal (as determined by
-    *  `lt`) appear in the same order in the sorted sequence as in the original.
+    *  The sort is stable. That is, elements that don't sort in any particular
+    *  order (as determined by `!precedes(x1, x2) && !precedes(x2, x1)`)
+    *  appear in the same order in the sorted array as in the original.
     *
-    *  @param  lt  the comparison function which tests whether
-    *              its first argument precedes its second argument in
-    *              the desired ordering.
-    *  @return     an array consisting of the elements of this array
-    *              sorted according to the comparison function `lt`.
+    *  @param  precedes  the comparison function which tests whether
+    *                    its first argument precedes its second argument in
+    *                    the desired ordering.
+    *  @return           an array consisting of the elements of this array
+    *                    sorted according to the comparison function `precedes`.
     */
-  def sortWith(lt: (A, A) => Boolean): Array[A] = sorted(Ordering.fromLessThan(lt))
+  def sortWith(precedes: (A, A) => Boolean): Array[A] = sorted(Ordering.fromLessThan(precedes))
 
   /** Sorts this array according to the Ordering which results from transforming
     *  an implicitly given Ordering with a transformation function.

@@ -1483,16 +1483,17 @@ final class StringOps(private val s: String) extends AnyVal {
 
   /** Sorts this string according to a comparison function.
     *
-    *  The sort is stable. That is, elements that are equal (as determined by
-    *  `lt`) appear in the same order in the sorted sequence as in the original.
+    *  The sort is stable. That is, elements that don't sort in any particular
+    *  order (as determined by `!precedes(x1, x2) && !precedes(x2, x1)`)
+    *  appear in the same order in the sorted string as in the original.
     *
-    *  @param  lt  the comparison function which tests whether
-    *              its first argument precedes its second argument in
-    *              the desired ordering.
-    *  @return     a string consisting of the elements of this string
-    *              sorted according to the comparison function `lt`.
+    *  @param  precedes  the comparison function which tests whether
+    *                    its first argument precedes its second argument in
+    *                    the desired ordering.
+    *  @return           a string consisting of the elements of this string
+    *                    sorted according to the comparison function `precedes`.
     */
-  def sortWith(lt: (Char, Char) => Boolean): String = new WrappedString(s).sortWith(lt).unwrap
+  def sortWith(precedes: (Char, Char) => Boolean): String = new WrappedString(s).sortWith(precedes).unwrap
 
   /** Sorts this string according to the Ordering which results from transforming
     * an implicitly given Ordering with a transformation function.

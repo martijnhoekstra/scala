@@ -711,20 +711,21 @@ trait SeqOps[+A, +CC[_], +C] extends Any
     *  $willNotTerminateInf
     *  $willForceEvaluation
     *
-    *  The sort is stable. That is, elements that are equal (as determined by
-    *  `lt`) appear in the same order in the sorted sequence as in the original.
+    *  The sort is stable. That is, elements that don't sort in any particular
+    *  order (as determined by `!precedes(x1, x2) && !precedes(x2, x1)`)
+    *  appear in the same order in the sorted sequence as in the original.
     *
-    *  @param  lt  the comparison function which tests whether
-    *              its first argument precedes its second argument in
-    *              the desired ordering.
-    *  @return     a $coll consisting of the elements of this $coll
-    *              sorted according to the comparison function `lt`.
+    *  @param  precedes  the comparison function which tests whether
+    *                    its first argument precedes its second argument in
+    *                    the desired ordering.
+    *  @return           a $coll consisting of the elements of this $coll
+    *                    sorted according to the comparison function `precedes`.
     *  @example {{{
     *    List("Steve", "Tom", "John", "Bob").sortWith(_.compareTo(_) < 0) =
     *    List("Bob", "John", "Steve", "Tom")
     *  }}}
     */
-  def sortWith(lt: (A, A) => Boolean): C = sorted(Ordering.fromLessThan(lt))
+  def sortWith(precedes: (A, A) => Boolean): C = sorted(Ordering.fromLessThan(precedes))
 
   /** Sorts this $coll according to the Ordering which results from transforming
     * an implicitly given Ordering with a transformation function.
