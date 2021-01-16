@@ -82,10 +82,13 @@ class HashMap[K, V](initialCapacity: Int, loadFactor: Double)
   override def contains(key: K): Boolean = findNode(key) ne null
 
   @`inline` private[this] def findNode(key: K): Node[K, V] = {
-    val hash = computeHash(key)
-    table(index(hash)) match {
-      case null => null
-      case nd => nd.findNode(key, hash)
+    if (isEmpty) null
+    else {
+      val hash = computeHash(key)
+      table(index(hash)) match {
+        case null => null
+        case nd => nd.findNode(key, hash)
+      }
     }
   }
 
