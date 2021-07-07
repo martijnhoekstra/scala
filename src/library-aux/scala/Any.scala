@@ -114,11 +114,13 @@ abstract class Any {
    *
    *  Depending on what `T0` is, the test is done in one of the below ways:
    *
-   *  - `T0` is a non-parameterized class type, e.g. `BigDecimal`: this method returns `true` if
-   *    the value of the receiver object is a `BigDecimal` or a subtype of `BigDecimal`.
-   *  - `T0` is a parameterized class type, e.g. `List[Int]`: this method returns `true` if
+   *  - `T0` is a non-parameterized class type, e.g. `BigDecimal`:
+        this method returns `true` if the value of the receiver object is a `BigDecimal` or a subtype of `BigDecimal`.
+   *  - `T0` is a parameterized non-array class type, e.g. `List[Int]`: this method returns `true` if
    *    the value of the receiver object is some `List[X]` for any `X`.
    *    For example, `List(1, 2, 3).isInstanceOf[List[String]]` will return true.
+   *  - `T0` is some array type `Array[Super]`: this method will return true if this value is some
+   *    array of which the element type is `Super` or some subclass of `Super`.
    *  - `T0` is some singleton type `x.type` or literal `x`: this method returns `this.eq(x)`.
    *    For example, `x.isInstanceOf[1]` is equivalent to `x.eq(1)`
    *  - `T0` is an intersection `X with Y` or `X & Y: this method is equivalent to `x.isInstanceOf[X] && x.isInstanceOf[Y]`
@@ -128,7 +130,20 @@ abstract class Any {
    *    For example, `x.isInstanceOf[A]` where `A` is an unbounded type parameter
    *    will return true for any value of `x`.
    *
-   *  This is exactly equivalent to the type pattern `_: T0`
+   *  This is exactly equivalent to the type pattern `_: T0` as described in [[https://scala-lang.org/files/archive/spec/2.13/08-pattern-matching.html#type-patterns SLS§8.2]]
+   * 
+   *  @example {{{
+   *    BigDecimal(3).isInstanceOf[BigDecimal]     //true
+   *    BigDecimal(2).isInstanceOf[Int]            //false
+   *    List(1, 2, 3).isInstanceOf[Seq[String]]    //true (!), with a warning
+   *    Array(1, 2, 3).isInstanceOf[Array[String]] //false, Array is a special case
+   *
+   *    1.isInstanceOf[1] //true
+   *    1.isInstanceOf[2] //false
+   *
+   *    def faultyTypeTest[A](x: Any) = x.isInstanceOf[A] //warning, this will always return true
+   *    faultyTypeTest[Int]("a string") //true !
+   *  }}}
    * 
    *  @note due to the unexpectedness of `List(1, 2, 3).isInstanceOf[List[String]]` returning true and
    *  `x.isInstanceOf[A]` where `A` is a type parameter or abstract member returning true,
